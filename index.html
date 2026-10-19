@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GPSR Helper</title>
+  <meta name="description" content="A free checklist and organiser for small sellers preparing products for EU General Product Safety Regulation (GPSR) requirements. Runs entirely in your browser.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="brand">
+      <h1>GPSR Helper</h1>
+      <p>Get your handmade and small-batch products ready for EU product safety rules.</p>
+    </div>
+    <nav>
+      <a href="#start" data-nav="start">Start</a>
+      <a href="#business" data-nav="business">My details</a>
+      <a href="#products" data-nav="products">Products</a>
+      <a href="#worth" data-nav="worth">Is the EU worth it?</a>
+      <a href="#data" data-nav="data">My data</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- START -->
+  <section data-view="start">
+    <h2>What this tool does</h2>
+    <div class="notice warn">
+      <strong>This is not legal advice.</strong> It is an organiser and checklist based on the EU General Product Safety Regulation
+      (<a href="https://eur-lex.europa.eu/eli/reg/2023/988/oj" target="_blank" rel="noopener">Regulation (EU) 2023/988</a>).
+      You are responsible for checking that your products and listings comply. If you are unsure, ask a qualified professional.
+    </div>
+    <div class="card">
+      <p>Since <strong>13 December 2024</strong>, consumer products sold to people in the EU must meet GPSR rules, wherever the seller is based. For each product this tool helps you:</p>
+      <ul class="clean">
+        <li>See whether GPSR probably applies, and which <em>other</em> EU rules you should look into</li>
+        <li>Write the safety information block that online listings must show</li>
+        <li>Write the identification text for your product label or packaging</li>
+        <li>Fill in a basic written risk assessment you can print and keep</li>
+        <li>Work out whether selling to the EU is worth the compliance cost</li>
+      </ul>
+      <p><strong>Your data stays on this device.</strong> Nothing you type is sent anywhere: there are no accounts and no cookies, and visits are only counted anonymously. See the <a href="privacy.html">privacy policy</a>.</p>
+      <div class="actions">
+        <a class="btn" href="#business">1. Add my details →</a>
+        <a class="btn" href="#products">2. Add products →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- BUSINESS -->
+  <section data-view="business">
+    <h2>My details</h2>
+    <p class="hint">GPSR requires the manufacturer's name and postal and electronic address on listings and on the product or its packaging.</p>
+    <form id="business-form" class="card" autocomplete="off">
+      <h3 style="margin-top:0">You (the manufacturer)</h3>
+      <label for="b-name">Business or trading name</label>
+      <input type="text" id="b-name" name="name" required>
+      <label for="b-address">Postal address</label>
+      <textarea id="b-address" name="address" rows="3" required></textarea>
+      <div class="row">
+        <div>
+          <label for="b-email">Email or website contact</label>
+          <input type="text" id="b-email" name="email" required>
+        </div>
+        <div>
+          <label for="b-eu">Where is your business based?</label>
+          <select id="b-eu" name="inEU">
+            <option value="no">Outside the EU</option>
+            <option value="yes">Inside the EU</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="rp-block">
+        <h3>EU Responsible Person</h3>
+        <p class="hint">If you are outside the EU, a business established in the EU must be responsible for your products (for example an importer, authorised representative or fulfilment service provider). Leave blank if you don't have one yet; your listings will be flagged as incomplete.</p>
+        <label for="rp-name">Name</label>
+        <input type="text" id="rp-name" name="rpName">
+        <label for="rp-address">Postal address in the EU</label>
+        <textarea id="rp-address" name="rpAddress" rows="3"></textarea>
+        <label for="rp-email">Email or website contact</label>
+        <input type="text" id="rp-email" name="rpEmail">
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="primary">Save details</button>
+      </div>
+      <div id="business-saved" class="notice ok" hidden>Saved on this device.</div>
+    </form>
+  </section>
+
+  <!-- PRODUCTS -->
+  <section data-view="products">
+    <h2>Products</h2>
+    <div id="product-list"></div>
+    <div class="actions">
+      <button type="button" class="primary" id="add-product">+ Add a product</button>
+    </div>
+  </section>
+
+  <!-- PRODUCT EDITOR -->
+  <section data-view="edit">
+    <h2 id="edit-title">Add a product</h2>
+    <form id="product-form" class="card" autocomplete="off">
+      <input type="hidden" name="id">
+      <label for="p-name">Product name</label>
+      <input type="text" id="p-name" name="name" required>
+
+      <label for="p-id">Type, batch or serial number <span class="hint">(something that identifies this product or batch)</span></label>
+      <input type="text" id="p-id" name="identifier" placeholder="e.g. SKU-CANDLE-LAV-2026-03" required>
+
+      <label for="p-cat">Category</label>
+      <select id="p-cat" name="category" required></select>
+
+      <label>Which of these apply? <span class="hint">(tick all that do)</span></label>
+      <div class="checks" id="p-flags"></div>
+
+      <label for="p-warn">Warnings and safety instructions <span class="hint">(what a buyer needs to know to use it safely)</span></label>
+      <textarea id="p-warn" name="warnings" placeholder="e.g. Never leave a burning candle unattended. Keep away from children and pets."></textarea>
+
+      <div class="actions">
+        <button type="submit" class="primary">Save product</button>
+        <button type="button" id="cancel-edit">Cancel</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- PRODUCT DETAIL -->
+  <section data-view="detail">
+    <div class="actions no-print" style="margin-top:0">
+      <a class="btn" href="#products">← All products</a>
+      <button type="button" id="detail-edit">Edit</button>
+      <button type="button" onclick="window.print()">Print / save as PDF</button>
+    </div>
+    <div id="detail-body"></div>
+  </section>
+
+  <!-- WORTH IT -->
+  <section data-view="worth">
+    <h2>Is selling to the EU worth it?</h2>
+    <p class="hint">A rough guide. It compares what you make from EU sales in a year with what compliance costs you in that year.</p>
+    <form id="worth-form" class="card" autocomplete="off">
+      <div class="row">
+        <div>
+          <label for="w-orders">EU orders per year (estimate)</label>
+          <input type="number" id="w-orders" name="orders" min="0" step="1" value="0">
+        </div>
+        <div>
+          <label for="w-profit">Average profit per EU order</label>
+          <input type="number" id="w-profit" name="profit" min="0" step="0.01" value="0">
+          <span class="hint">After materials, fees and shipping.</span>
+        </div>
+        <div>
+          <label for="w-rp">EU Responsible Person cost per year</label>
+          <input type="number" id="w-rp" name="rp" min="0" step="0.01" value="0">
+          <span class="hint">Get real quotes. Prices vary a lot by provider and product type.</span>
+        </div>
+        <div>
+          <label for="w-other">Other compliance costs per year</label>
+          <input type="number" id="w-other" name="other" min="0" step="0.01" value="0">
+          <span class="hint">Translations, labels, testing, packaging registrations, your time.</span>
+        </div>
+      </div>
+    </form>
+    <div id="worth-result"></div>
+  </section>
+
+  <!-- DATA -->
+  <section data-view="data">
+    <h2>My data</h2>
+    <div class="card">
+      <p>Everything you enter is saved only in this browser on this device (in "local storage"). It is not uploaded anywhere. Clearing your browser data, or using a private window, will remove it, so download a backup now and then.</p>
+      <div class="actions">
+        <button type="button" id="export-data">Download backup (.json)</button>
+        <label class="btn" for="import-file" style="margin:0">Restore from backup</label>
+        <input type="file" id="import-file" accept="application/json,.json" hidden>
+        <button type="button" class="danger" id="delete-all">Delete all my data</button>
+      </div>
+      <div id="data-msg" class="notice" hidden></div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <a href="privacy.html">Privacy policy</a>
+    <a href="terms.html">Terms &amp; disclaimer</a>
+    <p>Not legal advice. Not affiliated with the European Commission, Etsy, Shopify or any marketplace. Free to use: no accounts, payments or subscriptions.</p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
